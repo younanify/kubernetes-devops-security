@@ -2,30 +2,17 @@ pipeline {
   agent any
 
   stages {
-      stage('git version') {
+      stage('build artifact') {
             steps {
-              sh "git version"    
+              sh "mv clean package -DskipTests=true"    
             }
         }   
 
-      stage('maven version') {
+      stage('unit test') {
             steps {
-              sh "mvn -v"
+              sh "mvn test"
             }
         } 
-      stage('docker version') {
-            steps {
-              sh "docker --version"
-            }
-        }    
-
-
-      stage('kube version') {
-            steps {
-              withKubeConfig([credentialsId: 'kubeconfig']) {
-              sh "kubectl version --short"
-              }
-            }
-        }                    
+                  
     }
 }
