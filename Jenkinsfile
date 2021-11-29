@@ -2,11 +2,30 @@ pipeline {
   agent any
 
   stages {
-      stage('Build Artifact') {
+      stage('git version') {
             steps {
-              sh "mvn clean package -DskipTests=true"
-              archive 'target/*.jar' //so that they can be downloaded later
+              sh "git version"    
             }
         }   
+
+      stage('maven version') {
+            steps {
+              sh "mvn -v"
+            }
+        } 
+      stage('docker version') {
+            steps {
+              sh "docker --version"
+            }
+        }    
+
+
+      stage('kube version') {
+            steps {
+              withKubeConfig([credentialsId: 'kubeconfig']) {
+              sh "kubectl version --short"
+              }
+            }
+        }                    
     }
 }
